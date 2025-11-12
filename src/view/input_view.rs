@@ -10,3 +10,14 @@ pub fn read_purchase_amount() -> String {
 
     purchase_amount_input
 }
+
+pub fn read_winning_numbers() -> String {
+    println!("당첨 번호를 입력해 주세요.");
+    let mut winning_numbers_input = String::new();
+
+    io::stdin()
+        .read_line(&mut winning_numbers_input)
+        .expect("당첨 번호 읽기에 실패했습니다.");
+
+    winning_numbers_input
+}
