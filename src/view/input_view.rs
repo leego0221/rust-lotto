@@ -21,3 +21,14 @@ pub fn read_winning_numbers() -> String {
 
     winning_numbers_input
 }
+
+pub fn read_bonus_number() -> String {
+    println!("보너스 번호를 입력해 주세요.");
+    let mut bonus_number_input = String::new();
+
+    io::stdin()
+        .read_line(&mut bonus_number_input)
+        .expect("보너스 번호 읽기에 실패했습니다");
+
+    bonus_number_input
+}
