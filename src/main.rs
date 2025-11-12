@@ -59,12 +59,10 @@ fn main() {
             // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용
             .filter(|number| lotto_number.contains(*number))
             .count();
-        println!("[DEBUG] 당첨 번호 일치 개수: {}", numbers_count);
 
         // 보너스 번호 확인
         let bonus_number = bonus_number.get_number();
         let bonus_matched = lotto_number.contains(&bonus_number);
-        println!("[DEBUG] 보너스 번호 일치 여부: {}", bonus_matched);
 
         // 등수 매핑
         let rank = match (numbers_count, bonus_matched) {
@@ -75,7 +73,6 @@ fn main() {
             (3, _) => LottoRank::FIFTH,
             _ => LottoRank::NOTHING,
         };
-        println!("[DEBUG] 등수 확인: {:?}등\n", rank);
 
         // 로또 순위 집계표 갱신
         let count = rank_counter
@@ -85,15 +82,18 @@ fn main() {
         rank_counter.insert(rank, count + 1);
     }
 
+    // 총 구매 금액에 따른 수익률 계산하기
     let mut total_prize: u64 = 0;
     for (rank, count) in rank_counter.iter() {
         let prize = rank.get_prize() as u64;
         let count = *count as u64;
         total_prize += prize * count;
     }
-    println!("[DEBUG] 총 수익: {:?}", total_prize);
 
     let total_purchase = purchase_amount.get_money() as u64;
     let profit_rate = total_prize as f64 / total_purchase as f64 * 100.0;
-    println!("[DEBUG] 수익률: {:.1}%", profit_rate);
+
+    // 로또 순위 집계표 및 수익률 출력하기
+    output_view::show_winning_statistics(&rank_counter);
+    output_view::show_profit_rate(profit_rate);
 }
