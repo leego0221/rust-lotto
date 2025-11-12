@@ -11,6 +11,8 @@ use domain::winning_numbers::WinningNumbers;
 use domain::bonus_number::BonusNumber;
 use domain::lotto::Lotto;
 
+use std::collections::HashMap;
+
 fn main() {
     // 구입금액 입력
     let purchase_amount_input = input_view::read_purchase_amount();
@@ -40,9 +42,48 @@ fn main() {
     let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
     let bonus_number = BonusNumber::new(bonus_number_value);
 
-    println!("[DEBUG] 구입금액: {:?}", purchase_amount.get_money());
-    for (index, number) in winning_numbers.get_numbers().iter().enumerate() {
-        println!("[DEBUG] 당첨 번호 {}: {}", index + 1, number);
+    // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
+    let mut rank_counter = HashMap::new();
+    for i in 1..=6 {
+        rank_counter.insert(i, 0);
     }
-    println!("[DEBUG] 보너스 번호: {:?}", bonus_number.get_number());
+    println!("[DEBUG] rank_counter: {:?}", rank_counter);
+
+    for lotto in lottos {
+        // 당첨 번호 확인
+        let lotto_number = lotto.get_numbers();
+        let numbers_count = winning_numbers.get_numbers()
+            .iter()
+            // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용
+            .filter(|number| lotto_number.contains(*number))
+            .count();
+        println!("[DEBUG] 당첨 번호 일치 개수: {}", numbers_count);
+
+        // 보너스 번호 확인
+        let bonus_number = bonus_number.get_number();
+        let bonus_matched = lotto_number.contains(&bonus_number);
+        println!("[DEBUG] 보너스 번호 일치 여부: {}", bonus_matched);
+
+        // 등수 매핑
+        let rank = match (numbers_count, bonus_matched) {
+            (6, _) => 1,
+            (5, true) => 2,
+            (5, false) => 3,
+            (4, _) => 4,
+            (3, _) => 5,
+            _ => 6,
+        };
+        println!("[DEBUG] 등수 확인: {rank}등");
+
+        // 로또 순위 집계표 갱신
+        let count = rank_counter
+            .get(&rank)
+            .copied()
+            .unwrap_or(0);
+        rank_counter.insert(rank, count + 1);
+    }
+
+    for rank in rank_counter.iter() {
+        println!("[DEBUG] rank: {:?}", rank);
+    }
 }
