@@ -12,7 +12,7 @@ pub fn read_purchase_amount() -> String {
 }
 
 pub fn read_winning_numbers() -> String {
-    println!("당첨 번호를 입력해 주세요.");
+    println!("\n당첨 번호를 입력해 주세요.");
     let mut winning_numbers_input = String::new();
 
     io::stdin()
@@ -23,7 +23,7 @@ pub fn read_winning_numbers() -> String {
 }
 
 pub fn read_bonus_number() -> String {
-    println!("보너스 번호를 입력해 주세요.");
+    println!("\n보너스 번호를 입력해 주세요.");
     let mut bonus_number_input = String::new();
 
     io::stdin()

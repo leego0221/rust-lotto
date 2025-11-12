@@ -3,6 +3,7 @@ mod util;
 mod domain;
 
 use view::input_view;
+use view::output_view;
 use util::input_parser;
 use util::number_generator;
 use domain::purchase_amount::PurchaseAmount;
@@ -16,7 +17,7 @@ fn main() {
     let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
     let purchase_amount = PurchaseAmount::new(purchase_amount_value);
 
-    // 정해진 범위 내에서 중복되지 않는 난수 벡터 생성
+    // 구입 금액에 해당하는 만큼 로또 발행하기
     let mut lottos: Vec<Lotto> = Vec::new();
     let purchase_count = purchase_amount.get_money() / 1000;
     for _ in 0..purchase_count {
@@ -25,11 +26,9 @@ fn main() {
         lottos.push(lotto);
     }
 
-    for i in 0..purchase_count {
-        for lotto in lottos.get(i as usize).iter() {
-            println!("[DEBUG] {}번째 로또: {:?}", i + 1, lotto.get_numbers());
-        }
-    }
+    // 구매 개수, 구매한 로또 리스트 출력
+    output_view::show_purchase_count(purchase_count);
+    output_view::show_purchased_lottos(&lottos);
 
     // 당첨 번호 입력
     let winning_numbers_input = input_view::read_winning_numbers();
