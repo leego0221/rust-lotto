@@ -92,4 +92,8 @@ fn main() {
         total_prize += prize * count;
     }
     println!("[DEBUG] 총 수익: {:?}", total_prize);
+
+    let total_purchase = purchase_amount.get_money() as u64;
+    let profit_rate = total_prize as f64 / total_purchase as f64 * 100.0;
+    println!("[DEBUG] 수익률: {:.1}%", profit_rate);
 }
