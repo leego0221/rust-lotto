@@ -11,7 +11,7 @@ use domain::bonus_number::BonusNumber;
 fn main() {
     // 구입금액 입력
     let purchase_amount_input = input_view::read_purchase_amount();
-    let purchase_amount_value = input_parser::parse_unsigned_integer(purchase_amount_input);
+    let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
     let purchase_amount = PurchaseAmount::new(purchase_amount_value);
 
     // 당첨 번호 입력
@@ -21,7 +21,7 @@ fn main() {
 
     // 보너스 번호 입력
     let bonus_number_input = input_view::read_bonus_number();
-    let bonus_number_value = input_parser::parse_unsigned_integer(bonus_number_input);
+    let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
     let bonus_number = BonusNumber::new(bonus_number_value);
 
     // 디버깅 출력
