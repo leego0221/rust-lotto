@@ -10,8 +10,11 @@ use domain::purchase_amount::PurchaseAmount;
 use domain::winning_numbers::WinningNumbers;
 use domain::bonus_number::BonusNumber;
 use domain::lotto::Lotto;
+use domain::lotto_rank::LottoRank;
 
 use std::collections::HashMap;
+
+use strum::IntoEnumIterator;
 
 fn main() {
     // 구입금액 입력
@@ -44,10 +47,9 @@ fn main() {
 
     // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
     let mut rank_counter = HashMap::new();
-    for i in 1..=6 {
-        rank_counter.insert(i, 0);
+    for rank in LottoRank::iter() {
+        rank_counter.insert(rank, 0);
     }
-    println!("[DEBUG] rank_counter: {:?}", rank_counter);
 
     for lotto in lottos {
         // 당첨 번호 확인
@@ -66,14 +68,14 @@ fn main() {
 
         // 등수 매핑
         let rank = match (numbers_count, bonus_matched) {
-            (6, _) => 1,
-            (5, true) => 2,
-            (5, false) => 3,
-            (4, _) => 4,
-            (3, _) => 5,
-            _ => 6,
+            (6, _) => LottoRank::FIRST,
+            (5, true) => LottoRank::SECOND,
+            (5, false) => LottoRank::THIRD,
+            (4, _) => LottoRank::FOURTH,
+            (3, _) => LottoRank::FIFTH,
+            _ => LottoRank::NOTHING,
         };
-        println!("[DEBUG] 등수 확인: {rank}등");
+        println!("[DEBUG] 등수 확인: {:?}등\n", rank);
 
         // 로또 순위 집계표 갱신
         let count = rank_counter
@@ -83,7 +85,11 @@ fn main() {
         rank_counter.insert(rank, count + 1);
     }
 
-    for rank in rank_counter.iter() {
-        println!("[DEBUG] rank: {:?}", rank);
+    let mut total_prize: u64 = 0;
+    for (rank, count) in rank_counter.iter() {
+        let prize = rank.get_prize() as u64;
+        let count = *count as u64;
+        total_prize += prize * count;
     }
+    println!("[DEBUG] 총 수익: {:?}", total_prize);
 }
