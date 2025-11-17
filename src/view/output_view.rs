@@ -3,15 +3,15 @@ use crate::domain::lotto_rank::LottoRank;
 
 use std::collections::HashMap;
 
-pub fn show_purchase_count(purchase_count: u32) {
+pub fn show_purchase_count(purchase_count: usize) {
     println!("\n{purchase_count}개를 구매했습니다.");
 }
 
 pub fn show_purchased_lottos(lottos: &Vec<Lotto>) {
     for lotto in lottos.iter() {
-        let mut sorted_lotto = lotto.get_numbers();
-        sorted_lotto.sort();
-        println!("{:?}", sorted_lotto);
+        let mut display_lotto = lotto.numbers().to_vec();
+        display_lotto.sort();
+        println!("{:?}", display_lotto);
     }
 }
 

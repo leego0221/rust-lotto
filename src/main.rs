@@ -1,16 +1,16 @@
 mod view;
 mod util;
-mod domain;
 mod error;
+mod service;
+mod domain;
 
 use view::input_view;
 use view::output_view;
 use util::input_parser;
-use util::number_generator;
+use service::lotto_service;
 use domain::purchase_amount::PurchaseAmount;
 use domain::winning_numbers::WinningNumbers;
 use domain::bonus_number::BonusNumber;
-use domain::lotto::Lotto;
 use domain::lotto_rank::LottoRank;
 
 use std::collections::HashMap;
@@ -26,20 +26,14 @@ fn main() {
             Ok(value) => value,
             Err(e) => panic!("{}", e.message()),
         },
-        Err(e) => panic!("{}", e.message())
+        Err(e) => panic!("{}", e.message()),
     };
 
     // 구입 금액에 해당하는 만큼 로또 발행하기
-    let mut lottos: Vec<Lotto> = Vec::new();
-    let purchase_count = purchase_amount.money() / 1000;
-    for _ in 0..purchase_count {
-        let lotto_numbers = number_generator::generate_numbers_in_range(1, 45, 6);
-        let lotto = Lotto::new(lotto_numbers);
-        lottos.push(lotto);
-    }
+    let lottos = lotto_service::purchase(&purchase_amount);
 
     // 구매 개수, 구매한 로또 리스트 출력
-    output_view::show_purchase_count(purchase_count);
+    output_view::show_purchase_count(lottos.len());
     output_view::show_purchased_lottos(&lottos);
 
     // 당첨 번호 입력
@@ -61,7 +55,13 @@ fn main() {
             Ok(value) => value,
             Err(e) => panic!("{}", e.message()),
         },
-        Err(e) => panic!("{}", e.message())
+        Err(e) => panic!("{}", e.message()),
+    };
+
+    // 당첨 번호와 보너스 번호 중복 검증
+    match lotto_service::check_duplicate(&winning_numbers, &bonus_number) {
+        Ok(()) => (),
+        Err(e) => panic!("{}", e.message()),
     };
 
     // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
@@ -72,7 +72,7 @@ fn main() {
 
     for lotto in lottos {
         // 당첨 번호 확인
-        let lotto_number = lotto.get_numbers();
+        let lotto_number = lotto.numbers();
         let numbers_count = winning_numbers.numbers()
             .iter()
             // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용

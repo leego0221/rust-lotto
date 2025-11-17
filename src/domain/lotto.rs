@@ -1,14 +1,35 @@
+use std::collections::HashSet;
+
+use crate::error::errors::DomainError;
+
 #[derive(Debug)]
 pub struct Lotto {
     numbers: Vec<u32>
 }
 
 impl Lotto {
-    pub fn new(numbers: Vec<u32>) -> Lotto {
-        Lotto { numbers }
+    pub fn new(numbers: Vec<u32>) -> Result<Lotto, DomainError> {
+        Self::validate(&numbers)?;
+        Ok(Lotto { numbers })
     }
 
-    pub fn get_numbers(&self) -> Vec<u32> {
-        self.numbers.clone()
+    pub fn numbers(&self) -> &[u32] {
+        &self.numbers
+    }
+
+    fn validate(numbers: &[u32]) -> Result<(), DomainError> {
+        if numbers.len() != 6 {
+            return Err(DomainError::NumbersInvalidSize)
+        }
+
+        if numbers.len() != numbers.iter().collect::<HashSet<_>>().len() {
+            return Err(DomainError::NumbersDuplicate)
+        }
+
+        if numbers.iter().any(|number| *number < 1 || *number > 45) {
+            return Err(DomainError::NumbersInvalidRange)
+        }
+        
+        Ok(())
     }
 }
