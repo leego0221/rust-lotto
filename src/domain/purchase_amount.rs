@@ -7,7 +7,7 @@ pub struct PurchaseAmount {
 
 impl PurchaseAmount {
     pub fn new(money: u32) -> Result<PurchaseAmount, DomainError> {
-        let money = Self::validate(money)?;
+        Self::validate(money)?;
         Ok(PurchaseAmount { money })
     }
 
@@ -15,14 +15,15 @@ impl PurchaseAmount {
         self.money
     }
 
-    fn validate(money: u32) -> Result<u32, DomainError> {
+    fn validate(money: u32) -> Result<(), DomainError> {
         if money < 1000 {
             return Err(DomainError::MoneyTooSmall)
         }
+        
         if money % 1000 != 0 {
             return Err(DomainError::MoneyInvalidUnit)
         }
 
-        Ok(money)
+        Ok(())
     }
 }

@@ -8,7 +8,7 @@ pub fn parse_unsigned_integer(input: &str) -> Result<u32, InputError> {
 
     match trimmed_input.parse::<u32>() {
         Ok(value) => Ok(value),
-        Err(_) => Err(InputError::NotNumber),
+        Err(_) => Err(InputError::NotPositive),
     }
 }
 

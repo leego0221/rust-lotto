@@ -46,7 +46,10 @@ fn main() {
     let winning_numbers_input = input_view::read_winning_numbers();
     let winning_numbers_value = input_parser::parse_winning_number(&winning_numbers_input);
     let winning_numbers = match winning_numbers_value {
-        Ok(value) => WinningNumbers::new(value),
+        Ok(value) => match WinningNumbers::new(value) {
+            Ok(value) => value,
+            Err(e) => panic!("{}", e.message()),
+        },
         Err(e) => panic!("{}", e.message()),
     };
 
@@ -70,7 +73,7 @@ fn main() {
     for lotto in lottos {
         // 당첨 번호 확인
         let lotto_number = lotto.get_numbers();
-        let numbers_count = winning_numbers.get_numbers()
+        let numbers_count = winning_numbers.numbers()
             .iter()
             // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용
             .filter(|number| lotto_number.contains(*number))

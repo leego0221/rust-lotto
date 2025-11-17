@@ -7,7 +7,7 @@ pub struct BonusNumber {
 
 impl BonusNumber {
     pub fn new(number: u32) -> Result<BonusNumber, DomainError> {
-        let number = Self::validate(number)?;
+        Self::validate(number)?;
         Ok(BonusNumber { number })
     }
 
@@ -15,11 +15,11 @@ impl BonusNumber {
         self.number
     }
 
-    fn validate(number: u32) -> Result<u32, DomainError> {
+    fn validate(number: u32) -> Result<(), DomainError> {
         if number < 1 || number > 45 {
             return Err(DomainError::BonusInvalidRange)
         }
 
-        Ok(number)
+        Ok(())
     }
 }

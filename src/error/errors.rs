@@ -1,14 +1,14 @@
 #[derive(Debug)]
 pub enum InputError {
     Empty,
-    NotNumber,
+    NotPositive,
 }
 
 impl InputError {
     pub fn message(&self) -> &str {
         match self {
             InputError::Empty => "[ERROR] 입력값이 비어있습니다.",
-            InputError::NotNumber => "[ERROR] 입력값은 숫자여야 합니다.",
+            InputError::NotPositive => "[ERROR] 입력값은 양수여야 합니다.",
         }
     }
 }
