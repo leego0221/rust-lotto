@@ -1,6 +1,7 @@
 mod view;
 mod util;
 mod domain;
+mod error;
 
 use view::input_view;
 use view::output_view;
@@ -20,7 +21,10 @@ fn main() {
     // 구입금액 입력
     let purchase_amount_input = input_view::read_purchase_amount();
     let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
-    let purchase_amount = PurchaseAmount::new(purchase_amount_value);
+    let purchase_amount = match purchase_amount_value {
+        Ok(value) => PurchaseAmount::new(value),
+        Err(error) => panic!("{}", error.message())
+    };
 
     // 구입 금액에 해당하는 만큼 로또 발행하기
     let mut lottos: Vec<Lotto> = Vec::new();
@@ -43,7 +47,10 @@ fn main() {
     // 보너스 번호 입력
     let bonus_number_input = input_view::read_bonus_number();
     let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
-    let bonus_number = BonusNumber::new(bonus_number_value);
+    let bonus_number = match bonus_number_value {
+        Ok(value) => BonusNumber::new(value),
+        Err(error) => panic!("{}", error.message())
+    };
 
     // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
     let mut rank_counter = HashMap::new();

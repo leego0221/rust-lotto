@@ -1,11 +1,19 @@
-pub fn parse_unsigned_integer(input: &str) -> u32 {
-    input.trim()
-        .parse()
-        .expect("입력값을 u32로 변환하는 데에 실패했습니다.")
+use crate::error::input_error::InputError;
+
+pub fn parse_unsigned_integer(input: &str) -> Result<u32, InputError> {
+    let trimmed_input = input.trim();
+    if trimmed_input.is_empty() {
+        return Err(InputError::Empty)
+    }
+
+    match trimmed_input.parse::<u32>() {
+        Ok(value) => Ok(value),
+        Err(_) => Err(InputError::NotNumber),
+    }
 }
 
 pub fn parse_winning_number(input: &str) -> Vec<u32> {
     input.split(",")
-        .map(|number| parse_unsigned_integer(number))
+        .map(|number| parse_unsigned_integer(number).unwrap())
         .collect()
 }
