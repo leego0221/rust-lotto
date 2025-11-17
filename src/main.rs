@@ -22,13 +22,16 @@ fn main() {
     let purchase_amount_input = input_view::read_purchase_amount();
     let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
     let purchase_amount = match purchase_amount_value {
-        Ok(value) => PurchaseAmount::new(value),
+        Ok(value) => match PurchaseAmount::new(value) {
+            Ok(value) => value,
+            Err(e) => panic!("{}", e.message()),
+        },
         Err(e) => panic!("{}", e.message())
     };
 
     // 구입 금액에 해당하는 만큼 로또 발행하기
     let mut lottos: Vec<Lotto> = Vec::new();
-    let purchase_count = purchase_amount.get_money() / 1000;
+    let purchase_count = purchase_amount.money() / 1000;
     for _ in 0..purchase_count {
         let lotto_numbers = number_generator::generate_numbers_in_range(1, 45, 6);
         let lotto = Lotto::new(lotto_numbers);
@@ -100,7 +103,7 @@ fn main() {
         total_prize += prize * count;
     }
 
-    let total_purchase = purchase_amount.get_money() as u64;
+    let total_purchase = purchase_amount.money() as u64;
     let profit_rate = total_prize as f64 / total_purchase as f64 * 100.0;
 
     // 로또 순위 집계표 및 수익률 출력하기

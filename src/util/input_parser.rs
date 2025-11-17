@@ -1,4 +1,4 @@
-use crate::error::input_error::InputError;
+use crate::error::errors::InputError;
 
 pub fn parse_unsigned_integer(input: &str) -> Result<u32, InputError> {
     let trimmed_input = input.trim();
