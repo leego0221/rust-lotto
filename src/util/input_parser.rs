@@ -12,8 +12,8 @@ pub fn parse_unsigned_integer(input: &str) -> Result<u32, InputError> {
     }
 }
 
-pub fn parse_winning_number(input: &str) -> Vec<u32> {
+pub fn parse_winning_number(input: &str) -> Result<Vec<u32>, InputError> {
     input.split(",")
-        .map(|number| parse_unsigned_integer(number).unwrap())
+        .map(parse_unsigned_integer)
         .collect()
 }

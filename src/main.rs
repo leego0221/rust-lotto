@@ -23,7 +23,7 @@ fn main() {
     let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
     let purchase_amount = match purchase_amount_value {
         Ok(value) => PurchaseAmount::new(value),
-        Err(error) => panic!("{}", error.message())
+        Err(e) => panic!("{}", e.message())
     };
 
     // 구입 금액에 해당하는 만큼 로또 발행하기
@@ -42,14 +42,17 @@ fn main() {
     // 당첨 번호 입력
     let winning_numbers_input = input_view::read_winning_numbers();
     let winning_numbers_value = input_parser::parse_winning_number(&winning_numbers_input);
-    let winning_numbers = WinningNumbers::new(winning_numbers_value);
+    let winning_numbers = match winning_numbers_value {
+        Ok(value) => WinningNumbers::new(value),
+        Err(e) => panic!("{}", e.message()),
+    };
 
     // 보너스 번호 입력
     let bonus_number_input = input_view::read_bonus_number();
     let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
     let bonus_number = match bonus_number_value {
         Ok(value) => BonusNumber::new(value),
-        Err(error) => panic!("{}", error.message())
+        Err(e) => panic!("{}", e.message())
     };
 
     // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
