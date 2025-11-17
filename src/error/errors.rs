@@ -20,7 +20,7 @@ pub enum DomainError {
     NumbersInvalidSize,
     NumbersDuplicate,
     NumbersInvalidRange,
-    BonusInvalidSize,
+    BonusInvalidRange,
     BonusDuplicatesWithNumbers,
 }
 
@@ -32,7 +32,7 @@ impl DomainError {
             DomainError::NumbersInvalidSize => "[ERROR] 당첨 번호는 6개여야 합니다.",
             DomainError::NumbersDuplicate => "[ERROR] 당첨 번호 중 중복된 숫자가 있습니다.",
             DomainError::NumbersInvalidRange => "[ERROR] 당첨 번호는 1에서 45 사이여야 합니다.",
-            DomainError::BonusInvalidSize => "[ERROR] 보너스 번호는 1에서 45 사이여야 합니다.",
+            DomainError::BonusInvalidRange => "[ERROR] 보너스 번호는 1에서 45 사이여야 합니다.",
             DomainError::BonusDuplicatesWithNumbers => "[ERROR] 보너스 번호가 당첨 번호와 중복됩니다.",
         }
     }

@@ -54,7 +54,10 @@ fn main() {
     let bonus_number_input = input_view::read_bonus_number();
     let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
     let bonus_number = match bonus_number_value {
-        Ok(value) => BonusNumber::new(value),
+        Ok(value) => match BonusNumber::new(value) {
+            Ok(value) => value,
+            Err(e) => panic!("{}", e.message()),
+        },
         Err(e) => panic!("{}", e.message())
     };
 
@@ -74,7 +77,7 @@ fn main() {
             .count();
 
         // 보너스 번호 확인
-        let bonus_number = bonus_number.get_number();
+        let bonus_number = bonus_number.number();
         let bonus_matched = lotto_number.contains(&bonus_number);
 
         // 등수 매핑
