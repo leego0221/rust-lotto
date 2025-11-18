@@ -8,14 +8,10 @@ use view::input_view;
 use view::output_view;
 use util::input_parser;
 use service::lotto_service;
+use service::lotto_rank_service::LottoRankService;
 use domain::purchase_amount::PurchaseAmount;
 use domain::winning_numbers::WinningNumbers;
 use domain::bonus_number::BonusNumber;
-use domain::lotto_rank::LottoRank;
-
-use std::collections::HashMap;
-
-use strum::IntoEnumIterator;
 
 fn main() {
     // 구입금액 입력
@@ -65,52 +61,12 @@ fn main() {
     };
 
     // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기
-    let mut rank_counter = HashMap::new();
-    for rank in LottoRank::iter() {
-        rank_counter.insert(rank, 0);
-    }
-
-    for lotto in lottos {
-        // 당첨 번호 확인
-        let lotto_number = lotto.numbers();
-        let numbers_count = winning_numbers.numbers()
-            .iter()
-            // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용
-            .filter(|number| lotto_number.contains(*number))
-            .count();
-
-        // 보너스 번호 확인
-        let bonus_number = bonus_number.number();
-        let bonus_matched = lotto_number.contains(&bonus_number);
-
-        // 등수 매핑
-        let rank = match (numbers_count, bonus_matched) {
-            (6, _) => LottoRank::FIRST,
-            (5, true) => LottoRank::SECOND,
-            (5, false) => LottoRank::THIRD,
-            (4, _) => LottoRank::FOURTH,
-            (3, _) => LottoRank::FIFTH,
-            _ => LottoRank::NOTHING,
-        };
-
-        // 로또 순위 집계표 갱신
-        let count = rank_counter
-            .get(&rank)
-            .copied()
-            .unwrap_or(0);
-        rank_counter.insert(rank, count + 1);
-    }
+    let mut lotto_rank_service = LottoRankService::new();
+    lotto_rank_service.determine_ranks(&lottos, &winning_numbers, &bonus_number);
+    let rank_counter = lotto_rank_service.get_rank();
 
     // 총 구매 금액에 따른 수익률 계산하기
-    let mut total_prize: u64 = 0;
-    for (rank, count) in rank_counter.iter() {
-        let prize = rank.get_prize() as u64;
-        let count = *count as u64;
-        total_prize += prize * count;
-    }
-
-    let total_purchase = purchase_amount.money() as u64;
-    let profit_rate = total_prize as f64 / total_purchase as f64 * 100.0;
+    let profit_rate = lotto_rank_service.calculate_profit_rate(&purchase_amount);
 
     // 로또 순위 집계표 및 수익률 출력하기
     output_view::show_winning_statistics(&rank_counter);
