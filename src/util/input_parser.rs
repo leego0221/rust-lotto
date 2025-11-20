@@ -21,3 +21,80 @@ impl InputParser {
             .collect()
     }
 }
+
+#[cfg(test)]
+mod input_parser_tests {
+    use super::*;
+
+    #[test]
+    fn valid_unsigned_integer_input() {
+        // given
+        let input = "5";
+
+        // when
+        let result = InputParser::parse_unsigned_integer(input);
+
+        // then
+        assert_eq!(result.unwrap(), 5);
+    }
+
+    #[test]
+    fn unsigned_integer_input_empty() {
+        // given
+        let input = "";
+
+        // when
+        let result = InputParser::parse_unsigned_integer(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputEmpty);
+    }
+
+    #[test]
+    fn unsigned_integer_input_not_positive() {
+        // given
+        let input = "-100";
+
+        // when
+        let result = InputParser::parse_unsigned_integer(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputNotPositive);
+    }
+
+    #[test]
+    fn valid_winning_number_input() {
+        // given
+        let input = "1, 2, 3, 4, 5, 6";
+
+        // when
+        let result = InputParser::parse_winning_number(input);
+
+        // then
+        assert_eq!(result.unwrap(), vec![1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
+    fn winning_number_input_empty() {
+        // given
+        let input = "1,2,3,4,,6";
+
+        // when
+        let result = InputParser::parse_winning_number(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputEmpty);
+    }
+
+    #[test]
+    fn winning_number_input_not_positive() {
+        // given
+        let input = "-1,2,3,4,5,6";
+
+        // when
+        let result = InputParser::parse_winning_number(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputNotPositive);
+    }
+}
