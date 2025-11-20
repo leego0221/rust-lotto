@@ -16,14 +16,23 @@ impl LottoController {
 
     pub fn run(&self) {
         // 구입금액 입력
-        let purchase_amount_input = input_view::read_purchase_amount();
-        let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
-        let purchase_amount = match purchase_amount_value {
-            Ok(value) => match PurchaseAmount::new(value) {
-                Ok(value) => value,
-                Err(e) => panic!("{}", e.message()),
-            },
-            Err(e) => panic!("{}", e.message()),
+        let purchase_amount = loop {
+            let input = input_view::read_purchase_amount();
+            let value = input_parser::parse_unsigned_integer(&input);
+
+            match value {
+                Ok(value) => match PurchaseAmount::new(value) {
+                    Ok(value) => break value,
+                    Err(e) => {
+                        eprintln!("{} 다시 입력해주세요.", e.message());
+                        continue;
+                    },
+                },
+                Err(e) => {
+                    eprintln!("{}", e.message());
+                    continue;
+                },
+            };
         };
 
         // 구입 금액에 해당하는 만큼 로또 발행하기
@@ -34,31 +43,52 @@ impl LottoController {
         output_view::show_purchased_lottos(&lottos);
 
         // 당첨 번호 입력
-        let winning_numbers_input = input_view::read_winning_numbers();
-        let winning_numbers_value = input_parser::parse_winning_number(&winning_numbers_input);
-        let winning_numbers = match winning_numbers_value {
-            Ok(value) => match WinningNumbers::new(value) {
-                Ok(value) => value,
-                Err(e) => panic!("{}", e.message()),
-            },
-            Err(e) => panic!("{}", e.message()),
+        let winning_numbers = loop {
+            let input = input_view::read_winning_numbers();
+            let value = input_parser::parse_winning_number(&input);
+
+            match value {
+                Ok(value) => match WinningNumbers::new(value) {
+                    Ok(value) => break value,
+                    Err(e) => {
+                        eprintln!("{} 다시 입력해주세요.", e.message());
+                        continue;
+                    }
+                },
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            };
         };
 
         // 보너스 번호 입력
-        let bonus_number_input = input_view::read_bonus_number();
-        let bonus_number_value = input_parser::parse_unsigned_integer(&bonus_number_input);
-        let bonus_number = match bonus_number_value {
-            Ok(value) => match BonusNumber::new(value) {
-                Ok(value) => value,
-                Err(e) => panic!("{}", e.message()),
-            },
-            Err(e) => panic!("{}", e.message()),
-        };
+        let bonus_number = loop {
+            let input = input_view::read_bonus_number();
+            let value = input_parser::parse_unsigned_integer(&input);
 
-        // 당첨 번호와 보너스 번호 중복 검증
-        match lotto_service::check_duplicate(&winning_numbers, &bonus_number) {
-            Ok(()) => (),
-            Err(e) => panic!("{}", e.message()),
+            let number = match value {
+                Ok(value) => match BonusNumber::new(value) {
+                    Ok(value) => value,
+                    Err(e) => {
+                        eprintln!("{} 다시 입력해주세요.", e.message());
+                        continue;
+                    },
+                },
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                }
+            };
+
+            // 당첨 번호와 보너스 번호 중복 검증
+            match lotto_service::check_duplicate(&winning_numbers, &number) {
+                Ok(()) => break number,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                }
+            };
         };
 
         // 번호 일치 여부에 따라 등수 매긴 뒤 내부에 저장하기

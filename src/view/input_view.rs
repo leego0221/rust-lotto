@@ -1,7 +1,7 @@
 use std::io;
 
 pub fn read_purchase_amount() -> String {
-    println!("구입금액을 입력해 주세요.");
+    println!("\n구입금액을 입력해 주세요.");
     let mut purchase_amount_input = String::new();
 
     io::stdin()
@@ -28,7 +28,7 @@ pub fn read_bonus_number() -> String {
 
     io::stdin()
         .read_line(&mut bonus_number_input)
-        .expect("보너스 번호 읽기에 실패했습니다");
+        .expect("보너스 번호 읽기에 실패했습니다.");
 
     bonus_number_input
 }

@@ -19,15 +19,15 @@ impl Lotto {
 
     fn validate(numbers: &[u32]) -> Result<(), AppError> {
         if numbers.len() != 6 {
-            return Err(AppError::NumbersInvalidSize)
+            return Err(AppError::LottoInvalidSize)
         }
 
         if numbers.len() != numbers.iter().collect::<HashSet<_>>().len() {
-            return Err(AppError::NumbersDuplicate)
+            return Err(AppError::LottoDuplicate)
         }
 
         if numbers.iter().any(|number| *number < 1 || *number > 45) {
-            return Err(AppError::NumbersInvalidRange)
+            return Err(AppError::LottoInvalidRange)
         }
         
         Ok(())
