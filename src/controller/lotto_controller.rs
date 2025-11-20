@@ -1,7 +1,7 @@
-use crate::view::input_view;
-use crate::view::output_view;
-use crate::util::input_parser;
-use crate::service::lotto_service;
+use crate::view::input_view::InputView;
+use crate::view::output_view::OutputView;
+use crate::util::input_parser::InputParser;
+use crate::service::lotto_service::LottoService;
 use crate::service::lotto_rank_service::LottoRankService;
 use crate::domain::purchase_amount::PurchaseAmount;
 use crate::domain::winning_numbers::WinningNumbers;
@@ -17,9 +17,9 @@ impl LottoController {
     pub fn run(&self) {
         let purchase_amount = Self::read_purchase_amount();
 
-        let lottos = lotto_service::purchase(&purchase_amount);
-        output_view::show_purchase_count(lottos.len());
-        output_view::show_purchased_lottos(&lottos);
+        let lottos = LottoService::purchase(&purchase_amount);
+        OutputView::show_purchase_count(lottos.len());
+        OutputView::show_purchased_lottos(&lottos);
 
         let winning_numbers = Self::read_winning_numbers();
         let bonus_number = Self::read_bonus_number(&winning_numbers);
@@ -29,15 +29,15 @@ impl LottoController {
 
         let rank_counter = lotto_rank_service.get_rank();
         let profit_rate = lotto_rank_service.calculate_profit_rate(&purchase_amount);
-        output_view::show_winning_statistics(&rank_counter);
-        output_view::show_profit_rate(profit_rate);
+        OutputView::show_winning_statistics(&rank_counter);
+        OutputView::show_profit_rate(profit_rate);
     }
 
     fn read_purchase_amount() -> PurchaseAmount {
         loop {
-            let input_value = input_view::read_purchase_amount();
+            let input_value = InputView::read_purchase_amount();
             
-            let parsed_value = match input_parser::parse_unsigned_integer(&input_value) {
+            let parsed_value = match InputParser::parse_unsigned_integer(&input_value) {
                 Ok(v) => v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());
@@ -57,9 +57,9 @@ impl LottoController {
 
     fn read_winning_numbers() -> WinningNumbers {
         loop {
-            let input_value = input_view::read_winning_numbers();
+            let input_value = InputView::read_winning_numbers();
 
-            let parsed_value = match input_parser::parse_winning_number(&input_value) {
+            let parsed_value = match InputParser::parse_winning_number(&input_value) {
                 Ok(v) => v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());
@@ -79,9 +79,9 @@ impl LottoController {
 
     fn read_bonus_number(winning_numbers: &WinningNumbers) -> BonusNumber {
         loop {
-            let input = input_view::read_bonus_number();
+            let input = InputView::read_bonus_number();
 
-            let value = match input_parser::parse_unsigned_integer(&input) {
+            let value = match InputParser::parse_unsigned_integer(&input) {
                 Ok(v) => v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());
@@ -97,7 +97,7 @@ impl LottoController {
                 }
             };
 
-            match lotto_service::check_duplicate(winning_numbers, &bonus_number) {
+            match LottoService::check_duplicate(winning_numbers, &bonus_number) {
                 Ok(()) => break bonus_number,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());
