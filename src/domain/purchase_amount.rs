@@ -1,4 +1,4 @@
-use crate::error::errors::DomainError;
+use crate::error::errors::AppError;
 
 #[derive(Debug)]
 pub struct PurchaseAmount {
@@ -6,7 +6,7 @@ pub struct PurchaseAmount {
 }
 
 impl PurchaseAmount {
-    pub fn new(money: u32) -> Result<PurchaseAmount, DomainError> {
+    pub fn new(money: u32) -> Result<PurchaseAmount, AppError> {
         Self::validate(money)?;
         Ok(PurchaseAmount { money })
     }
@@ -15,13 +15,13 @@ impl PurchaseAmount {
         self.money
     }
 
-    fn validate(money: u32) -> Result<(), DomainError> {
+    fn validate(money: u32) -> Result<(), AppError> {
         if money < 1000 {
-            return Err(DomainError::MoneyTooSmall)
+            return Err(AppError::MoneyTooSmall)
         }
         
         if money % 1000 != 0 {
-            return Err(DomainError::MoneyInvalidUnit)
+            return Err(AppError::MoneyInvalidUnit)
         }
 
         Ok(())

@@ -2,7 +2,7 @@ use crate::domain::purchase_amount::PurchaseAmount;
 use crate::domain::winning_numbers::WinningNumbers;
 use crate::domain::bonus_number::BonusNumber;
 use crate::domain::lotto::Lotto;
-use crate::error::errors::DomainError;
+use crate::error::errors::AppError;
 use crate::util::number_generator;
 
 pub fn purchase(purchase_amount: &PurchaseAmount) -> Vec<Lotto> {
@@ -21,9 +21,9 @@ pub fn purchase(purchase_amount: &PurchaseAmount) -> Vec<Lotto> {
     lottos
 }
 
-pub fn check_duplicate(winning_numbers: &WinningNumbers, bonus_number: &BonusNumber) -> Result<(), DomainError> {
+pub fn check_duplicate(winning_numbers: &WinningNumbers, bonus_number: &BonusNumber) -> Result<(), AppError> {
     if winning_numbers.numbers().iter().any(|number| *number == bonus_number.number()) {
-        return Err(DomainError::BonusDuplicatesWithNumbers)
+        return Err(AppError::BonusDuplicatesWithNumbers)
     }
 
     Ok(())

@@ -1,20 +1,7 @@
 #[derive(Debug)]
-pub enum InputError {
-    Empty,
-    NotPositive,
-}
-
-impl InputError {
-    pub fn message(&self) -> &str {
-        match self {
-            InputError::Empty => "[ERROR] 입력값이 비어있습니다.",
-            InputError::NotPositive => "[ERROR] 입력값은 양수여야 합니다.",
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum DomainError {
+pub enum AppError {
+    InputEmpty,
+    InputNotPositive,
     MoneyTooSmall,
     MoneyInvalidUnit,
     NumbersInvalidSize,
@@ -24,16 +11,18 @@ pub enum DomainError {
     BonusDuplicatesWithNumbers,
 }
 
-impl DomainError {
+impl AppError {
     pub fn message(&self) -> &str {
         match self {
-            DomainError::MoneyTooSmall => "[ERROR] 구매 금액은 1000원 이상이어야 합니다.",
-            DomainError::MoneyInvalidUnit => "[ERROR] 구매 금액은 1000원 단위여야 합니다.",
-            DomainError::NumbersInvalidSize => "[ERROR] 당첨 번호는 6개여야 합니다.",
-            DomainError::NumbersDuplicate => "[ERROR] 당첨 번호 중 중복된 숫자가 있습니다.",
-            DomainError::NumbersInvalidRange => "[ERROR] 당첨 번호는 1에서 45 사이여야 합니다.",
-            DomainError::BonusInvalidRange => "[ERROR] 보너스 번호는 1에서 45 사이여야 합니다.",
-            DomainError::BonusDuplicatesWithNumbers => "[ERROR] 보너스 번호가 당첨 번호와 중복됩니다.",
+            Self::InputEmpty => "[ERROR] 입력값이 비어있습니다.",
+            Self::InputNotPositive => "[ERROR] 입력값은 양수여야 합니다.",
+            Self::MoneyTooSmall => "[ERROR] 구매 금액은 1000원 이상이어야 합니다.",
+            Self::MoneyInvalidUnit => "[ERROR] 구매 금액은 1000원 단위여야 합니다.",
+            Self::NumbersInvalidSize => "[ERROR] 당첨 번호는 6개여야 합니다.",
+            Self::NumbersDuplicate => "[ERROR] 당첨 번호 중 중복된 숫자가 있습니다.",
+            Self::NumbersInvalidRange => "[ERROR] 당첨 번호는 1에서 45 사이여야 합니다.",
+            Self::BonusInvalidRange => "[ERROR] 보너스 번호는 1에서 45 사이여야 합니다.",
+            Self::BonusDuplicatesWithNumbers => "[ERROR] 보너스 번호가 당첨 번호와 중복됩니다.",
         }
     }
 }

@@ -19,7 +19,6 @@ impl LottoController {
         let purchase_amount_input = input_view::read_purchase_amount();
         let purchase_amount_value = input_parser::parse_unsigned_integer(&purchase_amount_input);
         let purchase_amount = match purchase_amount_value {
-            
             Ok(value) => match PurchaseAmount::new(value) {
                 Ok(value) => value,
                 Err(e) => panic!("{}", e.message()),

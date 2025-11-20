@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use crate::error::errors::DomainError;
+use crate::error::errors::AppError;
 
 #[derive(Debug)]
 pub struct Lotto {
@@ -8,7 +8,7 @@ pub struct Lotto {
 }
 
 impl Lotto {
-    pub fn new(numbers: Vec<u32>) -> Result<Lotto, DomainError> {
+    pub fn new(numbers: Vec<u32>) -> Result<Lotto, AppError> {
         Self::validate(&numbers)?;
         Ok(Lotto { numbers })
     }
@@ -17,17 +17,17 @@ impl Lotto {
         &self.numbers
     }
 
-    fn validate(numbers: &[u32]) -> Result<(), DomainError> {
+    fn validate(numbers: &[u32]) -> Result<(), AppError> {
         if numbers.len() != 6 {
-            return Err(DomainError::NumbersInvalidSize)
+            return Err(AppError::NumbersInvalidSize)
         }
 
         if numbers.len() != numbers.iter().collect::<HashSet<_>>().len() {
-            return Err(DomainError::NumbersDuplicate)
+            return Err(AppError::NumbersDuplicate)
         }
 
         if numbers.iter().any(|number| *number < 1 || *number > 45) {
-            return Err(DomainError::NumbersInvalidRange)
+            return Err(AppError::NumbersInvalidRange)
         }
         
         Ok(())

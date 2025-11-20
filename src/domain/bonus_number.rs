@@ -1,4 +1,4 @@
-use crate::error::errors::DomainError;
+use crate::error::errors::AppError;
 
 #[derive(Debug)]
 pub struct BonusNumber {
@@ -6,7 +6,7 @@ pub struct BonusNumber {
 }
 
 impl BonusNumber {
-    pub fn new(number: u32) -> Result<BonusNumber, DomainError> {
+    pub fn new(number: u32) -> Result<BonusNumber, AppError> {
         Self::validate(number)?;
         Ok(BonusNumber { number })
     }
@@ -15,9 +15,9 @@ impl BonusNumber {
         self.number
     }
 
-    fn validate(number: u32) -> Result<(), DomainError> {
+    fn validate(number: u32) -> Result<(), AppError> {
         if number < 1 || number > 45 {
-            return Err(DomainError::BonusInvalidRange)
+            return Err(AppError::BonusInvalidRange)
         }
 
         Ok(())
