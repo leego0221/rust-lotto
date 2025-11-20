@@ -60,3 +60,47 @@ impl LottoRankService {
         self.rank_counter.insert(rank, count + 1);
     }
 }
+
+#[cfg(test)]
+mod lotto_rank_service_tests {
+    use super::*;
+
+    #[test]
+    fn determine_ranks_test() {
+        // given
+        let mut lotto_rank_service = LottoRankService::new();
+
+        let lottos = vec![
+            Lotto::new(vec![1, 2, 3, 4, 5, 6]).unwrap(),
+            Lotto::new(vec![7, 8, 9, 10, 11, 12]).unwrap(),
+        ];
+        let winning_numbers = WinningNumbers::new(vec![1, 2, 3, 4, 6, 7]).unwrap();
+        let bonus_number = BonusNumber::new(5).unwrap(); // 2등
+
+        // when
+        lotto_rank_service.determine_ranks(&lottos, &winning_numbers, &bonus_number);
+        let result = lotto_rank_service.get_rank();
+
+        // then
+        assert_eq!(*result.get(&LottoRank::SECOND).unwrap(), 1);
+    }
+
+    #[test]
+    fn calculate_profit_rate_test() {
+        // given
+        let mut lotto_rank_service = LottoRankService::new();
+
+        let purchase_amount = PurchaseAmount::new(1000).unwrap(); // 1개 구매
+        let lottos = vec![Lotto::new(vec![1, 2, 3, 4, 5, 6]).unwrap()]; // 1000원
+        let winning_numbers = WinningNumbers::new(vec![1, 2, 3, 7, 8, 9]).unwrap(); // 4등: 5000원
+        let bonus_number = BonusNumber::new(5).unwrap();
+
+        lotto_rank_service.determine_ranks(&lottos, &winning_numbers, &bonus_number);
+
+        // when
+        let result = lotto_rank_service.calculate_profit_rate(&purchase_amount);
+
+        // then
+        assert_eq!(result, 500 as f64);
+    }
+}

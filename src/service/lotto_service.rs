@@ -29,3 +29,46 @@ impl LottoService {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod lotto_service_tests {
+    use super::*;
+
+    #[test]
+    fn purchase_test() {
+        // given
+        let purchase_amount = PurchaseAmount::new(5000).unwrap();
+
+        // when
+        let lottos = LottoService::purchase(&purchase_amount);
+
+        // then
+        assert_eq!(lottos.len(), 5);
+    }
+
+    #[test]
+    fn check_duplicate_test() {
+        // given
+        let winning_numbers = WinningNumbers::new(vec![1, 2, 3, 4, 5, 6]).unwrap();
+        let bonus_number = BonusNumber::new(7).unwrap();
+
+        // when
+        let result = LottoService::check_duplicate(&winning_numbers, &bonus_number);
+
+        // then
+        assert_eq!(result.unwrap(), ());
+    }
+
+    #[test]
+    fn bonus_duplicates_with_numbers() {
+        // given
+        let winning_numbers = WinningNumbers::new(vec![1, 2, 3, 4, 5, 6]).unwrap();
+        let bonus_number = BonusNumber::new(5).unwrap();
+
+        // when
+        let result = LottoService::check_duplicate(&winning_numbers, &bonus_number);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::BonusDuplicatesWithNumbers);
+    }
+}
