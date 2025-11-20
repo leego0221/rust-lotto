@@ -1,4 +1,4 @@
-use crate::error::errors::AppError;
+use crate::error::AppError;
 
 #[derive(Debug)]
 pub struct PurchaseAmount {

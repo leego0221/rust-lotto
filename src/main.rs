@@ -1,11 +1,11 @@
-mod view;
-mod util;
+mod controller;
+mod domain;
 mod error;
 mod service;
-mod domain;
-mod controller;
+mod util;
+mod view;
 
-use controller::lotto_controller::LottoController;
+use controller::LottoController;
 
 fn main() {
     let lotto_controller = LottoController::new();

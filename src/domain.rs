@@ -1,5 +1,11 @@
-pub mod purchase_amount;
-pub mod winning_numbers;
 pub mod bonus_number;
 pub mod lotto;
 pub mod lotto_rank;
+pub mod purchase_amount;
+pub mod winning_numbers;
+
+pub use bonus_number::BonusNumber;
+pub use lotto::Lotto;
+pub use lotto_rank::LottoRank;
+pub use purchase_amount::PurchaseAmount;
+pub use winning_numbers::WinningNumbers;

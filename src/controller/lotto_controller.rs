@@ -1,11 +1,7 @@
-use crate::view::input_view::InputView;
-use crate::view::output_view::OutputView;
-use crate::util::input_parser::InputParser;
-use crate::service::lotto_service::LottoService;
-use crate::service::lotto_rank_service::LottoRankService;
-use crate::domain::purchase_amount::PurchaseAmount;
-use crate::domain::winning_numbers::WinningNumbers;
-use crate::domain::bonus_number::BonusNumber;
+use crate::domain::{BonusNumber, PurchaseAmount, WinningNumbers};
+use crate::service::{LottoRankService, LottoService};
+use crate::util::InputParser;
+use crate::view::{InputView, OutputView};
 
 pub struct LottoController;
 

@@ -2,11 +2,7 @@ use std::collections::HashMap;
 
 use strum::IntoEnumIterator;
 
-use crate::domain::bonus_number::BonusNumber;
-use crate::domain::lotto::Lotto;
-use crate::domain::lotto_rank::LottoRank;
-use crate::domain::purchase_amount::PurchaseAmount;
-use crate::domain::winning_numbers::WinningNumbers;
+use crate::domain::{BonusNumber, Lotto, LottoRank, PurchaseAmount, WinningNumbers};
 
 pub struct LottoRankService {
     rank_counter: HashMap<LottoRank, i32>,

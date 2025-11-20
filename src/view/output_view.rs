@@ -1,7 +1,6 @@
-use crate::domain::lotto::Lotto;
-use crate::domain::lotto_rank::LottoRank;
-
 use std::collections::HashMap;
+
+use crate::domain::{Lotto, LottoRank};
 
 pub struct OutputView;
 

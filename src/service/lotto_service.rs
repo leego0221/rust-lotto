@@ -1,9 +1,6 @@
-use crate::domain::purchase_amount::PurchaseAmount;
-use crate::domain::winning_numbers::WinningNumbers;
-use crate::domain::bonus_number::BonusNumber;
-use crate::domain::lotto::Lotto;
-use crate::error::errors::AppError;
-use crate::util::number_generator::NumberGenerator;
+use crate::domain::{BonusNumber, Lotto, PurchaseAmount, WinningNumbers};
+use crate::error::AppError;
+use crate::util::NumberGenerator;
 
 pub struct LottoService;
 
