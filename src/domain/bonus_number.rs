@@ -23,3 +23,32 @@ impl BonusNumber {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod bonus_number_tests {
+    use super::*;
+
+    #[test]
+    fn valid_bonus_number() {
+        // given
+        let number = 7;
+
+        // when
+        let result = BonusNumber::new(number);
+        
+        // then
+        assert_eq!(result.unwrap().number(), 7);
+    }
+
+    #[test]
+    fn bonus_invalid_range() {
+        // given
+        let number = 100;
+
+        // when
+        let result = BonusNumber::new(number);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::BonusInvalidRange);
+    }
+}

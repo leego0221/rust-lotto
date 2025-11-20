@@ -33,3 +33,56 @@ impl WinningNumbers {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod winning_numbers_tests {
+    use super::*;
+
+    #[test]
+    fn valid_winning_numbers() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 6];
+
+        // when
+        let result = WinningNumbers::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap().numbers(), vec![1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
+    fn numbers_invalid_size() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5];
+
+        // when
+        let result = WinningNumbers::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::NumbersInvalidSize);
+    }
+
+    #[test]
+    fn numbers_duplicate() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 5];
+
+        // when
+        let result = WinningNumbers::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::NumbersDuplicate);
+    }
+
+    #[test]
+    fn numbers_invalid_range() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 100];
+
+        // when
+        let result = WinningNumbers::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::NumbersInvalidRange);
+    }
+}

@@ -27,3 +27,44 @@ impl PurchaseAmount {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod purchase_amount_tests {
+    use super::*;
+
+    #[test]
+    fn valid_purchase_amount() {
+        // given
+        let money = 1000;
+
+        // when
+        let result = PurchaseAmount::new(money);
+
+        // then
+        assert_eq!(result.unwrap().money(), 1000);
+    }
+
+    #[test]
+    fn money_too_small() {
+        // given
+        let money = 500;
+
+        // when
+        let result = PurchaseAmount::new(money);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::MoneyTooSmall);
+    }
+
+    #[test]
+    fn money_invalid_unit() {
+        // given
+        let money = 1500;
+
+        // when
+        let result = PurchaseAmount::new(money);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::MoneyInvalidUnit);
+    }
+}

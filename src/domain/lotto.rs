@@ -33,3 +33,56 @@ impl Lotto {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod lotto_tests {
+    use super::*;
+
+    #[test]
+    fn valid_lotto() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 6];
+
+        // when
+        let result = Lotto::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap().numbers(), vec![1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
+    fn lotto_invalid_size() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5];
+
+        // when
+        let result = Lotto::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::LottoInvalidSize);
+    }
+
+    #[test]
+    fn lotto_duplicate() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 5];
+
+        // when
+        let result = Lotto::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::LottoDuplicate);
+    }
+
+    #[test]
+    fn lotto_invalid_range() {
+        // given
+        let numbers = vec![1, 2, 3, 4, 5, 100];
+
+        // when
+        let result = Lotto::new(numbers);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::LottoInvalidRange);
+    }
+}

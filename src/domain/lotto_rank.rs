@@ -33,3 +33,56 @@ impl LottoRank {
         }
     }
 }
+
+#[cfg(test)]
+mod lotto_rank_tests {
+    use strum::IntoEnumIterator;
+
+    use super::*;
+
+    #[test]
+    fn get_rank_test() {
+        // given
+        let count_and_matched = vec![
+            (6, false), // 1등
+            (5, true),  // 2등
+            (5, false), // 3등
+            (4, true),  // 4등
+            (3, false), // 5등
+            (2, true),  // 낙첨
+        ];
+        
+        // when
+        let result: Vec<LottoRank> = count_and_matched.iter()
+            .map(|(count, matched)| LottoRank::get_rank(*count, *matched))
+            .collect();
+
+        // then
+        assert_eq!(result, vec![
+            LottoRank::FIRST,
+            LottoRank::SECOND,
+            LottoRank::THIRD,
+            LottoRank::FOURTH,
+            LottoRank::FIFTH,
+            LottoRank::NOTHING
+        ]);
+    }
+
+    #[test]
+    fn get_prize_test() {
+        // given and when
+        let result: Vec<u32> = LottoRank::iter()
+            .map(|rank| rank.get_prize())
+            .collect();
+
+        // then
+        assert_eq!(result, vec![
+            2_000_000_000,
+            30_000_000,
+            1_500_000,
+            50_000,
+            5_000,
+            0,
+        ]);
+    }
+}
