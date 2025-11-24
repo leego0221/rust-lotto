@@ -9,7 +9,7 @@ pub enum AppError {
 
     SelectionInvalidMode,
 
-    ManualInvalidSize(u32),
+    ManualInvalidRange(u32),
 
     NumbersInvalidSize,
     NumbersDuplicate,
@@ -35,7 +35,7 @@ impl AppError {
 
             Self::SelectionInvalidMode => String::from("[ERROR] 로또 번호 선택 모드는 a 또는 m이어야 합니다."),
 
-            Self::ManualInvalidSize(maximum) => format!("[ERROR] 수동 선택 개수는 1에서 {} 사이여야 합니다.", maximum),
+            Self::ManualInvalidRange(maximum) => format!("[ERROR] 수동 선택 개수는 1에서 {} 사이여야 합니다.", maximum),
 
             Self::NumbersInvalidSize => String::from("[ERROR] 당첨 번호는 6개여야 합니다."),
             Self::NumbersDuplicate => String::from("[ERROR] 당첨 번호 중 중복된 숫자가 있습니다."),
