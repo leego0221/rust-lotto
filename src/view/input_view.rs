@@ -27,7 +27,7 @@ impl InputView {
     }
 
     pub fn read_manual_count() -> String {
-        println!("이 중 몇 개를 로또를 수동 선택하실지 입력해주세요.");
+        println!("이 중 몇 개를 로또를 수동 선택할지 입력해주세요.");
         let mut manual_count_input = String::new();
 
         io::stdin()

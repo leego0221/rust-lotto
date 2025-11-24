@@ -18,20 +18,18 @@ impl LottoController {
         println!("[DEBUG] 모드: {:?}", selection_mode);
 
         let pending_purchase_count = purchase_amount.money() / 1000 as u32;
-        let manual_count = Self::read_manual_count(pending_purchase_count);
-
-        let mut lottos = Vec::new();
-        let manual_count = manual_count.count();
+        let manual_count = match selection_mode {
+            SelectionMode::Auto => 0,
+            SelectionMode::Manual => Self::read_manual_count(pending_purchase_count).count(),
+        };
         let auto_count = pending_purchase_count - manual_count;
         println!("[DEBUG] 수동 카운트: {manual_count}, 자동 카운트: {auto_count}");
 
-        // 수동 번호 선택
+        let mut lottos = Vec::new();
         for _ in 0..manual_count {
             let lotto = Self::generate_manual_lotto();
             lottos.push(lotto);
         }
-
-        // 자동 번호 선택
         for _ in 0..auto_count {
             let lotto = Self::generate_auto_lotto();
             lottos.push(lotto);
