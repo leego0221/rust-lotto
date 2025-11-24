@@ -42,7 +42,6 @@ impl LottoRankService {
     fn count_winning_numbers(lotto: &Lotto, winning_numbers: &WinningNumbers) -> usize {
         winning_numbers.numbers()
             .iter()
-            // 이 부분에서 자동으로 참조자 단계를 맞춰주지만, 명시적으로 확인할 수 있도록 *number 적용
             .filter(|number| lotto.numbers().contains(*number))
             .count()
     }

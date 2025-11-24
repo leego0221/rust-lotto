@@ -10,12 +10,24 @@ impl InputParser {
         }
 
         match trimmed_input.parse::<u32>() {
-            Ok(value) => Ok(value),
+            Ok(v) => Ok(v),
             Err(_) => Err(AppError::InputNotPositive),
         }
     }
 
-    pub fn parse_winning_number(input: &str) -> Result<Vec<u32>, AppError> {
+    pub fn parse_character(input: &str) -> Result<char, AppError> {
+        let trimmed_input = input.trim();
+        if trimmed_input.is_empty() {
+            return Err(AppError::InputEmpty)
+        }
+
+        match trimmed_input.parse::<char>() {
+            Ok(v) => Ok(v),
+            Err(_) => Err(AppError::InputNotCharacter),
+        }
+    }
+
+    pub fn parse_numbers(input: &str) -> Result<Vec<u32>, AppError> {
         input.split(",")
             .map(Self::parse_unsigned_integer)
             .collect()
@@ -63,36 +75,72 @@ mod input_parser_tests {
     }
 
     #[test]
-    fn valid_winning_number_input() {
+    fn valid_character_input() {
         // given
-        let input = "1, 2, 3, 4, 5, 6";
+        let input = "w";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_character(input);
 
         // then
-        assert_eq!(result.unwrap(), vec![1, 2, 3, 4, 5, 6]);
+        assert_eq!(result.unwrap(), 'w');
     }
 
     #[test]
-    fn winning_number_input_empty() {
+    fn character_input_empty() {
         // given
-        let input = "1,2,3,4,,6";
+        let input = " ";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_character(input);
 
         // then
         assert_eq!(result.unwrap_err(), AppError::InputEmpty);
     }
 
     #[test]
-    fn winning_number_input_not_positive() {
+    fn character_input_not_char() {
+        // given
+        let input = "str";
+
+        // when
+        let result = InputParser::parse_character(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputNotCharacter);
+    }
+
+    #[test]
+    fn valid_numbers_input() {
+        // given
+        let input = "1, 2, 3, 4, 5, 6";
+
+        // when
+        let result = InputParser::parse_numbers(input);
+
+        // then
+        assert_eq!(result.unwrap(), vec![1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
+    fn numbers_input_empty() {
+        // given
+        let input = "1,2,3,4,,6";
+
+        // when
+        let result = InputParser::parse_numbers(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputEmpty);
+    }
+
+    #[test]
+    fn numbers_input_not_positive() {
         // given
         let input = "-1,2,3,4,5,6";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_numbers(input);
 
         // then
         assert_eq!(result.unwrap_err(), AppError::InputNotPositive);

@@ -5,15 +5,22 @@ use crate::domain::{Lotto, LottoRank};
 pub struct OutputView;
 
 impl OutputView {
+    pub fn show_main_title() {
+        println!("[로또 발매기] 프로그램에 오신 것을 환영합니다.");
+    }
+
     pub fn show_purchase_count(purchase_count: usize) {
         println!("\n{purchase_count}개를 구매했습니다.");
     }
 
-    pub fn show_purchased_lottos(lottos: &Vec<Lotto>) {
-        for lotto in lottos.iter() {
+    pub fn show_purchased_lottos(lottos: &Vec<Lotto>, manual_count: u32) {
+        for (i, lotto) in lottos.iter().enumerate() {
             let mut display_lotto = lotto.numbers().to_vec();
             display_lotto.sort();
-            println!("{:?}", display_lotto);
+            
+            let label = if i < manual_count as usize { "수동: " } else { "자동: " };
+
+            println!("{} {:?}", label, display_lotto);
         }
     }
 
