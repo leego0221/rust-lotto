@@ -22,6 +22,18 @@ mod lotto_service_tests {
     use super::*;
 
     #[test]
+    fn purchase_test() {
+        // given
+        let lotto_numbers = vec![1, 2, 3, 4, 5, 6];
+
+        // when
+        let result = LottoService::purchase(lotto_numbers);
+
+        // then
+        assert_eq!(result.unwrap().numbers(), vec![1, 2, 3, 4, 5, 6]);
+    }
+
+    #[test]
     fn check_duplicate_test() {
         // given
         let winning_numbers = WinningNumbers::new(vec![1, 2, 3, 4, 5, 6]).unwrap();

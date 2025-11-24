@@ -75,7 +75,43 @@ mod input_parser_tests {
     }
 
     #[test]
-    fn valid_winning_number_input() {
+    fn valid_character_input() {
+        // given
+        let input = "w";
+
+        // when
+        let result = InputParser::parse_character(input);
+
+        // then
+        assert_eq!(result.unwrap(), 'w');
+    }
+
+    #[test]
+    fn character_input_empty() {
+        // given
+        let input = " ";
+
+        // when
+        let result = InputParser::parse_character(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputEmpty);
+    }
+
+    #[test]
+    fn character_input_not_char() {
+        // given
+        let input = "str";
+
+        // when
+        let result = InputParser::parse_character(input);
+
+        // then
+        assert_eq!(result.unwrap_err(), AppError::InputNotCharacter);
+    }
+
+    #[test]
+    fn valid_numbers_input() {
         // given
         let input = "1, 2, 3, 4, 5, 6";
 
@@ -87,7 +123,7 @@ mod input_parser_tests {
     }
 
     #[test]
-    fn winning_number_input_empty() {
+    fn numbers_input_empty() {
         // given
         let input = "1,2,3,4,,6";
 
@@ -99,7 +135,7 @@ mod input_parser_tests {
     }
 
     #[test]
-    fn winning_number_input_not_positive() {
+    fn numbers_input_not_positive() {
         // given
         let input = "-1,2,3,4,5,6";
 
