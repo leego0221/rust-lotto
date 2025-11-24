@@ -9,6 +9,10 @@ impl OutputView {
         println!("[로또 발매기] 프로그램에 오신 것을 환영합니다.");
     }
 
+    pub fn show_pending_purchase_count(pending_purchase_count: u32) {
+        println!("\n현재 총 {}장의 로또를 구매할 수 있습니다.", pending_purchase_count);
+    }
+
     pub fn show_purchase_count(purchase_count: usize) {
         println!("\n{purchase_count}개를 구매했습니다.");
     }

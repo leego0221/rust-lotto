@@ -1,4 +1,4 @@
-use crate::domain::{BonusNumber, PurchaseAmount, SelectionMode, WinningNumbers};
+use crate::domain::{BonusNumber, ManualCount, PurchaseAmount, SelectionMode, WinningNumbers};
 use crate::service::{LottoRankService, LottoService};
 use crate::util::InputParser;
 use crate::view::{InputView, OutputView};
@@ -16,6 +16,10 @@ impl LottoController {
         
         let selection_mode = Self::read_selection_mode();
         println!("[DEBUG] 모드: {:?}", selection_mode);
+
+        let pending_purchase_count = purchase_amount.money() / 1000 as u32;
+        let manual_count = Self::read_manual_count(pending_purchase_count);
+        println!("[DEBUG] 수동 카운트: {}", manual_count.count());
         
         let lottos = LottoService::purchase(&purchase_amount);
         OutputView::show_purchase_count(lottos.len());
@@ -68,6 +72,29 @@ impl LottoController {
             };
 
             match SelectionMode::from(parsed_value) {
+                Ok(v) => break v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            }
+        }
+    }
+
+    fn read_manual_count(pending_purchase_count: u32) -> ManualCount {
+        loop {
+            OutputView::show_pending_purchase_count(pending_purchase_count);
+            let input_value = InputView::read_manual_count();
+
+            let parsed_value = match InputParser::parse_unsigned_integer(&input_value) {
+                Ok(v) => v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            };
+
+            match ManualCount::new(parsed_value, pending_purchase_count) {
                 Ok(v) => break v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());
