@@ -13,9 +13,7 @@ impl LottoController {
     pub fn run(&self) {
         OutputView::show_main_title();
         let purchase_amount = Self::read_purchase_amount();
-        
         let selection_mode = Self::read_selection_mode();
-        println!("[DEBUG] 모드: {:?}", selection_mode);
 
         let pending_purchase_count = purchase_amount.money() / 1000 as u32;
         let manual_count = match selection_mode {
@@ -23,20 +21,19 @@ impl LottoController {
             SelectionMode::Manual => Self::read_manual_count(pending_purchase_count).count(),
         };
         let auto_count = pending_purchase_count - manual_count;
-        println!("[DEBUG] 수동 카운트: {manual_count}, 자동 카운트: {auto_count}");
 
         let mut lottos = Vec::new();
-        for _ in 0..manual_count {
-            let lotto = Self::generate_manual_lotto();
+        for i in 1..=manual_count {
+            let lotto = Self::generate_manual_lotto(i);
             lottos.push(lotto);
         }
-        for _ in 0..auto_count {
+        for _ in 1..=auto_count {
             let lotto = Self::generate_auto_lotto();
             lottos.push(lotto);
         }
         
         OutputView::show_purchase_count(lottos.len());
-        OutputView::show_purchased_lottos(&lottos);
+        OutputView::show_purchased_lottos(&lottos, manual_count);
 
         let winning_numbers = Self::read_winning_numbers();
         let bonus_number = Self::read_bonus_number(&winning_numbers);
@@ -96,8 +93,7 @@ impl LottoController {
 
     fn read_manual_count(pending_purchase_count: u32) -> ManualCount {
         loop {
-            OutputView::show_pending_purchase_count(pending_purchase_count);
-            let input_value = InputView::read_manual_count();
+            let input_value = InputView::read_manual_count(pending_purchase_count);
 
             let parsed_value = match InputParser::parse_unsigned_integer(&input_value) {
                 Ok(v) => v,
@@ -117,9 +113,9 @@ impl LottoController {
         }
     }
 
-    fn generate_manual_lotto() -> Lotto {
+    fn generate_manual_lotto(index: u32) -> Lotto {
         loop {
-            let manual_numbers = Self::read_manual_numbers();
+            let manual_numbers = Self::read_manual_numbers(index);
 
             match LottoService::purchase(manual_numbers) {
                 Ok(v) => break v,
@@ -131,9 +127,9 @@ impl LottoController {
         }
     }
 
-    fn read_manual_numbers() -> Vec<u32> {
+    fn read_manual_numbers(index: u32) -> Vec<u32> {
         loop {
-            let input_value = InputView::read_manual_numbers();
+            let input_value = InputView::read_manual_numbers(index);
 
             match InputParser::parse_numbers(&input_value) {
                 Ok(v) => break v,

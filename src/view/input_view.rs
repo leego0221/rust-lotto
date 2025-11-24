@@ -26,8 +26,9 @@ impl InputView {
         selection_mode_input
     }
 
-    pub fn read_manual_count() -> String {
-        println!("이 중 몇 개를 로또를 수동 선택할지 입력해주세요.");
+    pub fn read_manual_count(count: u32) -> String {
+        println!("\n현재 총 {count}장의 로또를 구매할 수 있습니다.");
+        println!("이 중 몇 장의 로또를 수동 선택할지 입력해주세요.");
         let mut manual_count_input = String::new();
 
         io::stdin()
@@ -37,8 +38,8 @@ impl InputView {
         manual_count_input
     }
 
-    pub fn read_manual_numbers() -> String {
-        println!("\n수동으로 로또 번호를 입력해 주세요.");
+    pub fn read_manual_numbers(index: u32) -> String {
+        println!("\n{index}번째 수동 로또 번호를 입력해 주세요.");
         let mut manual_numbers_input = String::new();
 
         io::stdin()
