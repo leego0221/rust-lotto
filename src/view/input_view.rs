@@ -37,6 +37,17 @@ impl InputView {
         manual_count_input
     }
 
+    pub fn read_manual_numbers() -> String {
+        println!("\n수동으로 로또 번호를 입력해 주세요.");
+        let mut manual_numbers_input = String::new();
+
+        io::stdin()
+            .read_line(&mut manual_numbers_input)
+            .expect("수동 로또 번호 읽기에 실패했습니다.");
+
+        manual_numbers_input
+    }
+
     pub fn read_winning_numbers() -> String {
         println!("\n당첨 번호를 입력해 주세요.");
         let mut winning_numbers_input = String::new();

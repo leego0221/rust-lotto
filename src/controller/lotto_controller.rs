@@ -1,6 +1,6 @@
-use crate::domain::{BonusNumber, ManualCount, PurchaseAmount, SelectionMode, WinningNumbers};
+use crate::domain::{BonusNumber, Lotto, ManualCount, PurchaseAmount, SelectionMode, WinningNumbers};
 use crate::service::{LottoRankService, LottoService};
-use crate::util::InputParser;
+use crate::util::{InputParser, NumberGenerator};
 use crate::view::{InputView, OutputView};
 
 pub struct LottoController;
@@ -19,9 +19,24 @@ impl LottoController {
 
         let pending_purchase_count = purchase_amount.money() / 1000 as u32;
         let manual_count = Self::read_manual_count(pending_purchase_count);
-        println!("[DEBUG] 수동 카운트: {}", manual_count.count());
+
+        let mut lottos = Vec::new();
+        let manual_count = manual_count.count();
+        let auto_count = pending_purchase_count - manual_count;
+        println!("[DEBUG] 수동 카운트: {manual_count}, 자동 카운트: {auto_count}");
+
+        // 수동 번호 선택
+        for _ in 0..manual_count {
+            let lotto = Self::generate_manual_lotto();
+            lottos.push(lotto);
+        }
+
+        // 자동 번호 선택
+        for _ in 0..auto_count {
+            let lotto = Self::generate_auto_lotto();
+            lottos.push(lotto);
+        }
         
-        let lottos = LottoService::purchase(&purchase_amount);
         OutputView::show_purchase_count(lottos.len());
         OutputView::show_purchased_lottos(&lottos);
 
@@ -104,11 +119,53 @@ impl LottoController {
         }
     }
 
+    fn generate_manual_lotto() -> Lotto {
+        loop {
+            let manual_numbers = Self::read_manual_numbers();
+
+            match LottoService::purchase(manual_numbers) {
+                Ok(v) => break v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            }
+        }
+    }
+
+    fn read_manual_numbers() -> Vec<u32> {
+        loop {
+            let input_value = InputView::read_manual_numbers();
+
+            match InputParser::parse_numbers(&input_value) {
+                Ok(v) => break v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            }
+        }
+    }
+
+    fn generate_auto_lotto() -> Lotto {
+        loop {
+            let auto_numbers = NumberGenerator::generate_numbers_in_range(1, 45, 6);
+
+            match LottoService::purchase(auto_numbers) {
+                Ok(v) => break v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            }
+        }
+    }
+
     fn read_winning_numbers() -> WinningNumbers {
         loop {
             let input_value = InputView::read_winning_numbers();
 
-            let parsed_value = match InputParser::parse_winning_number(&input_value) {
+            let parsed_value = match InputParser::parse_numbers(&input_value) {
                 Ok(v) => v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());

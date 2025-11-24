@@ -27,7 +27,7 @@ impl InputParser {
         }
     }
 
-    pub fn parse_winning_number(input: &str) -> Result<Vec<u32>, AppError> {
+    pub fn parse_numbers(input: &str) -> Result<Vec<u32>, AppError> {
         input.split(",")
             .map(Self::parse_unsigned_integer)
             .collect()
@@ -80,7 +80,7 @@ mod input_parser_tests {
         let input = "1, 2, 3, 4, 5, 6";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_numbers(input);
 
         // then
         assert_eq!(result.unwrap(), vec![1, 2, 3, 4, 5, 6]);
@@ -92,7 +92,7 @@ mod input_parser_tests {
         let input = "1,2,3,4,,6";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_numbers(input);
 
         // then
         assert_eq!(result.unwrap_err(), AppError::InputEmpty);
@@ -104,7 +104,7 @@ mod input_parser_tests {
         let input = "-1,2,3,4,5,6";
 
         // when
-        let result = InputParser::parse_winning_number(input);
+        let result = InputParser::parse_numbers(input);
 
         // then
         assert_eq!(result.unwrap_err(), AppError::InputNotPositive);
