@@ -1,4 +1,4 @@
-use crate::domain::{BonusNumber, PurchaseAmount, WinningNumbers};
+use crate::domain::{BonusNumber, PurchaseAmount, SelectionMode, WinningNumbers};
 use crate::service::{LottoRankService, LottoService};
 use crate::util::InputParser;
 use crate::view::{InputView, OutputView};
@@ -11,8 +11,12 @@ impl LottoController {
     }
 
     pub fn run(&self) {
+        OutputView::show_main_title();
         let purchase_amount = Self::read_purchase_amount();
-
+        
+        let selection_mode = Self::read_selection_mode();
+        println!("[DEBUG] 모드: {:?}", selection_mode);
+        
         let lottos = LottoService::purchase(&purchase_amount);
         OutputView::show_purchase_count(lottos.len());
         OutputView::show_purchased_lottos(&lottos);
@@ -42,6 +46,28 @@ impl LottoController {
             };
 
             match PurchaseAmount::new(parsed_value) {
+                Ok(v) => break v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            }
+        }
+    }
+
+    fn read_selection_mode() -> SelectionMode {
+        loop {
+            let input_value = InputView::read_selection_mode();
+
+            let parsed_value = match InputParser::parse_character(&input_value) {
+                Ok(v) => v,
+                Err(e) => {
+                    eprintln!("{} 다시 입력해주세요.", e.message());
+                    continue;
+                },
+            };
+
+            match SelectionMode::from(parsed_value) {
                 Ok(v) => break v,
                 Err(e) => {
                     eprintln!("{} 다시 입력해주세요.", e.message());

@@ -10,8 +10,20 @@ impl InputParser {
         }
 
         match trimmed_input.parse::<u32>() {
-            Ok(value) => Ok(value),
+            Ok(v) => Ok(v),
             Err(_) => Err(AppError::InputNotPositive),
+        }
+    }
+
+    pub fn parse_character(input: &str) -> Result<char, AppError> {
+        let trimmed_input = input.trim();
+        if trimmed_input.is_empty() {
+            return Err(AppError::InputEmpty)
+        }
+
+        match trimmed_input.parse::<char>() {
+            Ok(v) => Ok(v),
+            Err(_) => Err(AppError::InputNotCharacter),
         }
     }
 

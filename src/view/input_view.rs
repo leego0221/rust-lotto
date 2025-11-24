@@ -14,6 +14,18 @@ impl InputView {
         purchase_amount_input
     }
 
+    pub fn read_selection_mode() -> String {
+        println!("\n로또 번호는 '전체 자동' 또는 '수동 포함' 두 가지 방식 중 선택이 가능합니다.");
+        println!("원하는 방식을 선택해주세요. (a: 전체 자동, m: 수동 포함)");
+        let mut selection_mode_input = String::new();
+
+        io::stdin()
+            .read_line(&mut selection_mode_input)
+            .expect("선택 모드 읽기에 실패했습니다.");
+
+        selection_mode_input
+    }
+
     pub fn read_winning_numbers() -> String {
         println!("\n당첨 번호를 입력해 주세요.");
         let mut winning_numbers_input = String::new();

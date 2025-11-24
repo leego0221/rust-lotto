@@ -5,6 +5,10 @@ use crate::domain::{Lotto, LottoRank};
 pub struct OutputView;
 
 impl OutputView {
+    pub fn show_main_title() {
+        println!("[로또 발매기] 프로그램에 오신 것을 환영합니다.");
+    }
+
     pub fn show_purchase_count(purchase_count: usize) {
         println!("\n{purchase_count}개를 구매했습니다.");
     }
