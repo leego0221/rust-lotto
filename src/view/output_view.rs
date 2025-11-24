@@ -18,7 +18,7 @@ impl OutputView {
             let mut display_lotto = lotto.numbers().to_vec();
             display_lotto.sort();
             
-            let label = if i < manual_count as usize { "수동: " } else { "자동: " };
+            let label = if i < manual_count as usize { "수동:" } else { "자동:" };
 
             println!("{} {:?}", label, display_lotto);
         }
